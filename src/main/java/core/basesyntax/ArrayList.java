@@ -1,10 +1,10 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int ARRAY_CAPACITY = 10;
+    private static final int MULTIPLIER = 3 / 2 + 1;
     private T[] array;
     private int size;
 
@@ -26,9 +26,7 @@ public class ArrayList<T> implements List<T> {
         checkIndexForAdd(index);
         grow();
 
-        for (int i = size - 1; i >= index; i--) {
-            array[i + 1] = array[i];
-        }
+        System.arraycopy(array, index, array, index + 1, size - index);
 
         array[index] = value;
         size++;
@@ -63,9 +61,7 @@ public class ArrayList<T> implements List<T> {
 
         final T tempValue = get(index);
 
-        for (int i = index; i < size - 1; i++) {
-            array[i] = array[i + 1];
-        }
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
 
         size--;
         array[size] = null;
@@ -110,14 +106,18 @@ public class ArrayList<T> implements List<T> {
         if (size == array.length) {
             int oldCapacity = array.length;
             int newCapacity = oldCapacity + (oldCapacity >> 1);
-            array = Arrays.copyOf(array, newCapacity);
+            T[] tempArray = (T[]) new Object[newCapacity];
+            System.arraycopy(array, 0, tempArray, 0, oldCapacity);
+            array = tempArray;
         }
     }
 
     private void ensureCapacity(List<T> list) {
         if (array.length < size + list.size()) {
-            int newCapacity = Math.max(array.length * 3 / 2 + 1, size + list.size());
-            array = Arrays.copyOf(array, newCapacity);
+            int newCapacity = Math.max(array.length * MULTIPLIER, size + list.size());
+            T[] tempArray = (T[]) new Object[newCapacity];
+            System.arraycopy(array, 0, tempArray, 0, array.length);
+            array = tempArray;
         }
     }
 
