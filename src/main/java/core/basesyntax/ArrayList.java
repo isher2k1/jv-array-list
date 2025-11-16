@@ -8,7 +8,7 @@ public class ArrayList<T> implements List<T> {
     private static final int ONE = 1;
     private static final int TWO = 2;
     private static final int THREE = 3;
-    private static final float MULTIPLIER = (float) THREE / TWO + ONE;
+    private static final float MULTIPLIER = (float) THREE / TWO;
     private T[] array;
     private int size;
 
@@ -118,7 +118,7 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity(List<T> list) {
         if (array.length < size + list.size()) {
-            int newCapacity = max((int) (array.length * MULTIPLIER), size + list.size());
+            int newCapacity = max((int) (array.length * MULTIPLIER + ONE), size + list.size());
             T[] tempArray = (T[]) new Object[newCapacity];
             System.arraycopy(array, ZERO, tempArray, ZERO, array.length);
             array = tempArray;
